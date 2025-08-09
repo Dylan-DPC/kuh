@@ -1,3 +1,4 @@
+#![feature(associated_type_defaults)]
 pub use crate::derow::Derow;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::cmp::Ordering;
@@ -77,6 +78,16 @@ where
 {
     fn cmp(&self, other: &Self) -> Ordering {
         Ord::cmp(self.derow(), other.derow())
+    }
+}
+
+impl<'a, B> AsRef<B> for Kuh<'a, B>
+where
+    B: Derow<Target = B> + Ord,
+    Self: Derow<Target = <B as Derow>::Target>,
+{
+    fn as_ref(&self) -> &B {
+        self.derow()
     }
 }
 
